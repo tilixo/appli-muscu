@@ -1,5 +1,17 @@
 import Dexie, { type EntityTable } from 'dexie'
-import { DEFAULT_PROFILE, type AppSettings, type Exercise, type Profile, type Template, type Workout, type WorkoutSet } from './types'
+import {
+  DEFAULT_PROFILE,
+  type AppSettings,
+  type Exercise,
+  type Food,
+  type FoodEntry,
+  type MealPreset,
+  type NutritionGoals,
+  type Profile,
+  type Template,
+  type Workout,
+  type WorkoutSet,
+} from './types'
 import { seedDatabase } from './seed'
 
 export const db = new Dexie('carnet-muscu') as Dexie & {
@@ -9,6 +21,10 @@ export const db = new Dexie('carnet-muscu') as Dexie & {
   templates: EntityTable<Template, 'id'>
   settings: EntityTable<AppSettings, 'key'>
   profile: EntityTable<Profile, 'key'>
+  foods: EntityTable<Food, 'id'>
+  foodEntries: EntityTable<FoodEntry, 'id'>
+  mealPresets: EntityTable<MealPreset, 'id'>
+  nutritionGoals: EntityTable<NutritionGoals, 'from'>
 }
 
 // Schéma versionné : ne jamais modifier une version publiée.
@@ -25,5 +41,13 @@ db.version(1).stores({
 db.version(2)
   .stores({ profile: 'key' })
   .upgrade((tx) => tx.table('profile').put(DEFAULT_PROFILE))
+
+// v3 : nutrition. Ajout pur de tables.
+db.version(3).stores({
+  foods: '++id, &code, name, favorite, lastUsedAt',
+  foodEntries: '++id, date, foodId',
+  mealPresets: '++id, name, lastUsedAt',
+  nutritionGoals: 'from',
+})
 
 db.on('populate', (tx) => seedDatabase(tx))

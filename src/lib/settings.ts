@@ -11,7 +11,10 @@ export async function getSettings(): Promise<AppSettings> {
   return { ...DEFAULT_SETTINGS, ...(await db.settings.get('app')) }
 }
 
-export async function updateSettings(patch: Partial<Omit<AppSettings, 'key'>>) {
-  const current = await getSettings()
-  await db.settings.put({ ...current, ...patch, key: 'app' })
+export function updateSettings(patch: Partial<Omit<AppSettings, 'key'>>) {
+  // Transaction : évite qu'une modification rapprochée en écrase une autre.
+  return db.transaction('rw', db.settings, async () => {
+    const current = await getSettings()
+    await db.settings.put({ ...current, ...patch, key: 'app' })
+  })
 }

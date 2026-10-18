@@ -92,3 +92,71 @@ export const DEFAULT_PROFILE: Profile = {
   goalAdjustments: { ...DEFAULT_GOAL_ADJUSTMENTS },
   adaptiveWindowDays: DEFAULT_WINDOW_DAYS,
 }
+
+// ---------- Nutrition (v3) ----------
+
+export interface Macros {
+  kcal: number
+  protein: number // g
+  carbs: number // g
+  fat: number // g
+}
+
+export type Meal = 'petit-dej' | 'dejeuner' | 'diner' | 'collation'
+
+export const MEALS: { key: Meal; label: string }[] = [
+  { key: 'petit-dej', label: 'Petit-déjeuner' },
+  { key: 'dejeuner', label: 'Déjeuner' },
+  { key: 'diner', label: 'Dîner' },
+  { key: 'collation', label: 'Collations' },
+]
+
+/** Aliment connu : produit scanné (cache Open Food Facts) ou créé à la main. Valeurs pour 100 g. */
+export interface Food {
+  id: number
+  name: string
+  brand?: string
+  code?: string // code-barres
+  per100: Macros
+  /** Portion indiquée sur l'emballage (g). */
+  servingGrams?: number
+  source: 'off' | 'manuel'
+  favorite: 0 | 1 // nombre : les booléens ne sont pas indexables
+  lastUsedAt?: string // ISO
+  lastGrams?: number
+}
+
+/** Ligne du journal. Les valeurs sont copiées : modifier un aliment ne réécrit pas l'historique. */
+export interface FoodEntry {
+  id: number
+  date: string // 'YYYY-MM-DD'
+  meal: Meal
+  name: string
+  foodId?: number
+  grams?: number // absent pour une saisie rapide
+  per100?: Macros
+  total: Macros
+  createdAt: string // ISO
+}
+
+export interface MealPresetItem {
+  name: string
+  foodId?: number
+  grams?: number
+  per100?: Macros
+  total: Macros
+}
+
+export interface MealPreset {
+  id: number
+  name: string
+  items: MealPresetItem[]
+  lastUsedAt?: string
+}
+
+/** Objectifs applicables à partir de la date `from` (incluse). */
+export interface NutritionGoals extends Macros {
+  from: string // 'YYYY-MM-DD'
+}
+
+export const DEFAULT_GOALS: Macros = { kcal: 2200, protein: 150, carbs: 250, fat: 70 }

@@ -7,7 +7,11 @@ export function useProfile(): Profile {
   return { ...DEFAULT_PROFILE, ...stored }
 }
 
-export async function updateProfile(patch: Partial<Omit<Profile, 'key'>>) {
-  const current = { ...DEFAULT_PROFILE, ...(await db.profile.get('profile')) }
-  await db.profile.put({ ...current, ...patch, key: 'profile' })
+// Lecture + écriture dans une même transaction : deux modifications rapprochées
+// s'exécutent l'une après l'autre au lieu de s'écraser.
+export function updateProfile(patch: Partial<Omit<Profile, 'key'>>) {
+  return db.transaction('rw', db.profile, async () => {
+    const current = { ...DEFAULT_PROFILE, ...(await db.profile.get('profile')) }
+    await db.profile.put({ ...current, ...patch, key: 'profile' })
+  })
 }

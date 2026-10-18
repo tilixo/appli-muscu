@@ -17,7 +17,8 @@ npm run dev        # http://localhost:5173, exposé aussi sur le réseau local
 
 1. Mac/PC et iPhone sur le même Wi-Fi.
 2. `npm run dev` affiche une adresse `Network: http://192.168.x.x:5173`. Ouvre-la dans Safari sur l'iPhone.
-3. En HTTP sur le réseau local, Safari ne considère pas la page comme sécurisée : l'interface et les données fonctionnent, mais **pas** le service worker (mode hors-ligne), le stockage persistant ni la caméra. Pour tester ces points, passe par la version déployée sur GitHub Pages (HTTPS).
+3. En HTTP sur le réseau local, Safari ne considère pas la page comme sécurisée : l'interface et les données fonctionnent, mais **pas** le service worker (mode hors-ligne), le stockage persistant ni la caméra.
+4. Pour tester le **scan de code-barres** en local : `npm run dev:https`, ouvre `https://192.168.x.x:5173`, accepte l'avertissement de certificat (Afficher les détails → visiter ce site web), puis autorise la caméra. Le reste (installation, hors-ligne) se teste sur la version GitHub Pages.
 
 ## Déployer sur GitHub Pages
 
@@ -38,6 +39,7 @@ Le chemin de base (`base` de Vite) est déduit automatiquement du nom du dépôt
 
 - Schéma Dexie versionné dans `src/db/db.ts` : pour toute évolution, ajouter une nouvelle `db.version(N)` (ne jamais modifier une version existante).
 - Dates stockées en ISO 8601, affichées en fr-FR, semaines du lundi au dimanche.
+- Les produits scannés ou trouvés sur Open Food Facts sont gardés en cache local : un produit déjà vu se retrouve sans réseau. Seules la recherche en ligne et le premier scan d'un produit nécessitent internet (aucune donnée personnelle n'est envoyée, juste le code-barres ou le texte recherché).
 - Pense à exporter régulièrement tes données (Réglages, à partir de la phase 4) : désinstaller l'app supprime les données.
 
 ## Icônes

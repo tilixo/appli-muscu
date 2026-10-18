@@ -4,6 +4,7 @@ import { TabBar } from './components/TabBar'
 import { UpdatePrompt } from './components/UpdatePrompt'
 import BodyPage from './features/body/BodyPage'
 import ExercisesPage from './features/exercises/ExercisesPage'
+import AddFoodPage from './features/nutrition/AddFoodPage'
 import NutritionPage from './features/nutrition/NutritionPage'
 import SettingsPage from './features/settings/SettingsPage'
 import TemplateEditPage from './features/templates/TemplateEditPage'
@@ -48,6 +49,7 @@ const router = createHashRouter([
       { path: '/exercices/:id', element: <ExerciseHistoryPage /> },
       { path: '/volume', element: <WeeklyVolumePage /> },
       { path: '/nutrition', element: <NutritionPage /> },
+      { path: '/nutrition/ajouter', element: <AddFoodPage /> },
       { path: '/corps', element: <BodyPage /> },
       { path: '/reglages', element: <SettingsPage /> },
       { path: '*', element: <WorkoutsHome /> },
