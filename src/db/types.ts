@@ -63,6 +63,8 @@ export interface AppSettings {
   defaultRestSeconds: number
   sound: boolean
   wakeLock: boolean
+  /** Exercices suivis dans l'écran Progression. */
+  keyExerciseIds?: number[]
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -160,3 +162,31 @@ export interface NutritionGoals extends Macros {
 }
 
 export const DEFAULT_GOALS: Macros = { kcal: 2200, protein: 150, carbs: 250, fat: 70 }
+
+// ---------- Corps (v4) ----------
+
+/** Une pesée par jour (la saisie remplace celle du même jour). */
+export interface WeighInRow {
+  date: string // 'YYYY-MM-DD'
+  kg: number
+}
+
+export const MEASURES = [
+  { key: 'taille', label: 'Tour de taille', unit: 'cm' },
+  { key: 'hanches', label: 'Hanches', unit: 'cm' },
+  { key: 'poitrine', label: 'Poitrine', unit: 'cm' },
+  { key: 'epaules', label: 'Épaules', unit: 'cm' },
+  { key: 'bras', label: 'Bras', unit: 'cm' },
+  { key: 'cuisse', label: 'Cuisse', unit: 'cm' },
+  { key: 'mollet', label: 'Mollet', unit: 'cm' },
+  { key: 'cou', label: 'Cou', unit: 'cm' },
+  { key: 'masseGrasse', label: 'Masse grasse', unit: '%' },
+] as const
+
+export type MeasureKey = (typeof MEASURES)[number]['key']
+
+/** Mensurations d'un jour : seuls les champs mesurés sont présents. */
+export interface MeasurementRow {
+  date: string // 'YYYY-MM-DD'
+  values: Partial<Record<MeasureKey, number>>
+}

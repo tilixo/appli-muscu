@@ -3,6 +3,7 @@ import { createHashRouter, Outlet, RouterProvider, useLocation } from 'react-rou
 import { TabBar } from './components/TabBar'
 import { UpdatePrompt } from './components/UpdatePrompt'
 import BodyPage from './features/body/BodyPage'
+import MeasurementsPage from './features/body/MeasurementsPage'
 import ExercisesPage from './features/exercises/ExercisesPage'
 import AddFoodPage from './features/nutrition/AddFoodPage'
 import NutritionPage from './features/nutrition/NutritionPage'
@@ -16,6 +17,7 @@ import WorkoutsHome from './features/workouts/WorkoutsHome'
 // Pages avec graphiques chargées à la demande (recharts est volumineux).
 const ExerciseHistoryPage = lazy(() => import('./features/exercises/ExerciseHistoryPage'))
 const WeeklyVolumePage = lazy(() => import('./features/stats/WeeklyVolumePage'))
+const ProgressionPage = lazy(() => import('./features/progression/ProgressionPage'))
 
 function Layout() {
   const { pathname } = useLocation()
@@ -51,6 +53,8 @@ const router = createHashRouter([
       { path: '/nutrition', element: <NutritionPage /> },
       { path: '/nutrition/ajouter', element: <AddFoodPage /> },
       { path: '/corps', element: <BodyPage /> },
+      { path: '/corps/mensurations', element: <MeasurementsPage /> },
+      { path: '/corps/progression', element: <ProgressionPage /> },
       { path: '/reglages', element: <SettingsPage /> },
       { path: '*', element: <WorkoutsHome /> },
     ],

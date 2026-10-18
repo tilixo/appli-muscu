@@ -9,7 +9,7 @@ export default function TdeeChart({ points }: { points: WeeklyPoint[] }) {
     <div>
       <div className="h-44">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+          <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <CartesianGrid stroke="#27272a" vertical={false} />
             <XAxis dataKey="week" tick={{ fill: '#71717a', fontSize: 11 }} tickLine={false} axisLine={false} minTickGap={24} />
             <YAxis tick={{ fill: '#71717a', fontSize: 11 }} tickLine={false} axisLine={false} domain={['auto', 'auto']} width={48} />

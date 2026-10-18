@@ -1,6 +1,8 @@
+import { useLiveQuery } from 'dexie-react-hooks'
 import { useEffect, useState } from 'react'
 import { Stepper } from '../../components/Stepper'
 import { card, input } from '../../components/ui'
+import { db } from '../../db/db'
 import type { Profile } from '../../db/types'
 import { localDay } from '../../lib/dates'
 import { fmtInt, fmtNumber, parseDecimal } from '../../lib/format'
@@ -22,8 +24,8 @@ const segment = (active: boolean) =>
 
 export function ProfileSection() {
   const profile = useProfile()
-  // Les pesées arrivent avec le suivi du corps (phase 3) : pour l'instant, poids du profil.
-  const theoretical = theoreticalFromProfile(profile, [], localDay())
+  const weighIns = useLiveQuery(() => db.weighIns.toArray(), []) ?? []
+  const theoretical = theoreticalFromProfile(profile, weighIns, localDay())
 
   return (
     <section className={`${card} space-y-4 p-4`}>
@@ -52,9 +54,13 @@ export function ProfileSection() {
           />
         </label>
         <NumberField label="Taille (cm)" value={profile.heightCm} onCommit={(v) => updateProfile({ heightCm: v })} />
-        <NumberField label="Poids (kg)" value={profile.weightKg} decimal onCommit={(v) => updateProfile({ weightKg: v })} />
+        {weighIns.length === 0 && <NumberField label="Poids (kg)" value={profile.weightKg} decimal onCommit={(v) => updateProfile({ weightKg: v })} />}
       </div>
-      <p className="-mt-2 text-xs text-zinc-500">Le poids sera remplacé par ta moyenne lissée dès que tu enregistreras des pesées (onglet Corps).</p>
+      <p className="-mt-2 text-xs text-zinc-500">
+        {weighIns.length === 0
+          ? 'Ce poids sera remplacé par ta moyenne lissée dès ta première pesée (onglet Corps).'
+          : 'Poids : moyenne lissée sur 7 jours de tes pesées (onglet Corps).'}
+      </p>
 
       <label className="block space-y-1">
         <span className="text-sm text-zinc-400">Niveau d'activité</span>

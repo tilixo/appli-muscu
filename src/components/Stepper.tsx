@@ -12,7 +12,17 @@ interface Props {
   label?: string
 }
 
-const roundTo = (v: number, step: number) => Math.round(v / step) * step
+/**
+ * Valeur suivante au pas près. Une valeur hors grille (ex. 77,3 avec un pas de 2,5)
+ * va d'abord au cran le plus proche dans le sens demandé. Tolérance pour les flottants (80,3 / 0,1).
+ */
+export function stepValue(value: number, step: number, dir: 1 | -1): number {
+  const k = value / step
+  const nearest = Math.round(k)
+  const onGrid = Math.abs(k - nearest) < 1e-6
+  const next = onGrid ? nearest + dir : dir > 0 ? Math.ceil(k) : Math.floor(k)
+  return Number((next * step).toFixed(2))
+}
 
 /** − [valeur] +, la valeur se saisit au clavier en la touchant. */
 export function Stepper({ value, onChange, step, min = 0, max = 9999, decimal, label }: Props) {
@@ -20,11 +30,7 @@ export function Stepper({ value, onChange, step, min = 0, max = 9999, decimal, l
   const [draft, setDraft] = useState('')
 
   const clamp = (v: number) => Math.min(max, Math.max(min, v))
-  // Arrondi au pas pour éviter 77.49999 ; on garde la valeur exacte si elle est hors grille.
-  const bump = (dir: 1 | -1) => {
-    const next = Number.isInteger(value / step) ? value + dir * step : dir > 0 ? Math.ceil(value / step) * step : Math.floor(value / step) * step
-    onChange(clamp(Number(roundTo(next, 0.01).toFixed(2))))
-  }
+  const bump = (dir: 1 | -1) => onChange(clamp(stepValue(value, step, dir)))
 
   const commit = () => {
     const n = parseDecimal(draft)
