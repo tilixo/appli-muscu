@@ -1,5 +1,5 @@
 import type { Transaction } from 'dexie'
-import type { Exercise, MuscleGroup, PlanItem, Template } from './types'
+import { DEFAULT_PROFILE, type Exercise, type MuscleGroup, type PlanItem, type Template } from './types'
 
 const EXERCISES: [string, MuscleGroup][] = [
   // Pectoraux
@@ -119,4 +119,5 @@ export async function seedDatabase(tx: Transaction) {
     items: items.map(([ex, targetSets]): PlanItem => ({ exerciseId: idByName.get(ex)!, targetSets })),
   }))
   await tx.table('templates').bulkAdd(templates)
+  await tx.table('profile').put(DEFAULT_PROFILE)
 }

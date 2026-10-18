@@ -1,3 +1,5 @@
+import { DEFAULT_GOAL_ADJUSTMENTS, DEFAULT_WINDOW_DAYS, type ActivityLevel, type Goal, type Sex } from '../features/tdee/tdee'
+
 export const MUSCLE_GROUPS = [
   'Pectoraux',
   'Dos',
@@ -68,4 +70,25 @@ export const DEFAULT_SETTINGS: AppSettings = {
   defaultRestSeconds: 90,
   sound: true,
   wakeLock: true,
+}
+
+export interface Profile {
+  key: 'profile'
+  sex?: Sex
+  birthDate?: string // 'YYYY-MM-DD'
+  heightCm?: number
+  /** Poids de référence, utilisé tant qu'aucune pesée n'est enregistrée. */
+  weightKg?: number
+  activity: ActivityLevel
+  goal: Goal
+  goalAdjustments: Record<Goal, number>
+  adaptiveWindowDays: number
+}
+
+export const DEFAULT_PROFILE: Profile = {
+  key: 'profile',
+  activity: 'modere',
+  goal: 'maintien',
+  goalAdjustments: { ...DEFAULT_GOAL_ADJUSTMENTS },
+  adaptiveWindowDays: DEFAULT_WINDOW_DAYS,
 }

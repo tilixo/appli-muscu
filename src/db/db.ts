@@ -1,5 +1,5 @@
 import Dexie, { type EntityTable } from 'dexie'
-import type { AppSettings, Exercise, Template, Workout, WorkoutSet } from './types'
+import { DEFAULT_PROFILE, type AppSettings, type Exercise, type Profile, type Template, type Workout, type WorkoutSet } from './types'
 import { seedDatabase } from './seed'
 
 export const db = new Dexie('carnet-muscu') as Dexie & {
@@ -8,6 +8,7 @@ export const db = new Dexie('carnet-muscu') as Dexie & {
   sets: EntityTable<WorkoutSet, 'id'>
   templates: EntityTable<Template, 'id'>
   settings: EntityTable<AppSettings, 'key'>
+  profile: EntityTable<Profile, 'key'>
 }
 
 // Schéma versionné : ne jamais modifier une version publiée.
@@ -19,5 +20,10 @@ db.version(1).stores({
   templates: '++id, name',
   settings: 'key',
 })
+
+// v2 : profil (TDEE). Ajout pur : les tables existantes sont conservées telles quelles.
+db.version(2)
+  .stores({ profile: 'key' })
+  .upgrade((tx) => tx.table('profile').put(DEFAULT_PROFILE))
 
 db.on('populate', (tx) => seedDatabase(tx))

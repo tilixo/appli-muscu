@@ -6,6 +6,7 @@ import { updateSettings, useSettings } from '../../lib/settings'
 import { beep, unlockAudio } from '../../lib/sound'
 import { isStoragePersisted, requestPersistentStorage } from '../../lib/storage'
 import { REST_OPTIONS } from '../exercises/ExerciseForm'
+import { ProfileSection } from './ProfileSection'
 
 export default function SettingsPage() {
   const settings = useSettings()
@@ -19,6 +20,8 @@ export default function SettingsPage() {
     <div>
       <PageHeader title="Réglages" />
       <div className="space-y-4 px-3 pb-6">
+        <ProfileSection />
+
         <section className={`${card} divide-y divide-zinc-800`}>
           <label className="flex min-h-14 items-center justify-between gap-4 px-4">
             <span>Repos par défaut</span>
