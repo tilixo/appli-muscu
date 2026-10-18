@@ -11,7 +11,7 @@ npm install
 npm run dev        # http://localhost:5173, exposé aussi sur le réseau local
 ```
 
-`npm run build` vérifie les types puis construit dans `dist/`. `npm run preview` sert ce build (port 4173), avec le service worker.
+`npm test` lance les tests unitaires (Vitest). `npm run build` vérifie les types puis construit dans `dist/`. `npm run preview` sert ce build (port 4173), avec le service worker.
 
 ## Tester sur iPhone (réseau local)
 
